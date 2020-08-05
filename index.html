@@ -1,0 +1,138 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Euterpe by pgupta321</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Euterpe</h1>
+        <p>Lyrics Generation</p>
+
+        <p class="view"><a href="https://github.gatech.edu/pgupta321/Euterpe">View the Project on GitHub <small>pgupta321/Euterpe</small></a></p>
+
+
+      </header>
+      <section>
+        <h1>
+<a id="euterpe-the-muse" class="anchor" href="#euterpe-the-muse" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Euterpe: The Muse</h1>
+<p>Jonathan Lafiandra, Pranshu Gupta, Shrija Mishra, Shubhangi Upasani, Yuli Liu</p>
+<p>CS7641: Machine Learning</p>
+<p>In the world today, there is more music than ever before. This abundance of musical data provides opportunities for us to take advantage of it. Our objective with this project is to analyze the ocean of music out there and find patterns that can be used to create new lyrics.</p>
+<h2>
+<a id="the-million-song-dataset" class="anchor" href="#the-million-song-dataset" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The Million Song Dataset</h2>
+<p>The <a href="http://millionsongdataset.com/">Million Song Dataset</a> is a dataset curated by an organization named EchoNest (now Spotify) that has one million songs where each song consists of 41 distinct features related to audio analysis (tempo, duration, mode, loudness etc), artist information (artist popularity, artist familiarity etc) and metadata (releases, title, song hotness etc). We look at the MSD summary data set for our project, as the full MSD dataset is 280GB in size and difficult to work with. The summary dataset also has all the songs but it has only those features which are suitable to save in a key value format.</p>
+<h2>
+<a id="data-analysis-and-visualization" class="anchor" href="#data-analysis-and-visualization" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Data Analysis and Visualization</h2>
+<p>To begin with, we look at how the different attributes in the dataset are distributed. If there are any missing values, or whether there is any correlation between the attributes or not.</p>
+<p>The following figure shows the presence/absence of values for each attribute and song. We can see that the attributes like "artist_latitute", "artist_longitude" and "song_hottness" are spasrely populated.</p>
+<p><img src="images/data_presence.png" alt="Presence of values across attributes"></p>
+<p>The follwoing image shows distribution plots for the attributes - "artist_familiarity", "artist_hotttnesss", "song_hotttness", "duration", "key", "tempo", "loudness", "mode" and time_signature".</p>
+<p><img src="images/data_distribution.png" alt="Distribution of values across attributes"></p>
+<h2>
+<a id="song-popularity-prediction" class="anchor" href="#song-popularity-prediction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Song Popularity Prediction</h2>
+<p>As we can see, "song_hotttnesss" a metric of song popularity is an important feature which is not present in many of records. In order to enrich our data, we can build a model to predict the feature by training it on the songs which have the attribute available.</p>
+<p>To start with we see if any other attributes have significant correlation with "song_hotttness", or if there are fields that are correlated. See the below figure:</p>
+<p><img src="images/correlation_matrix.png" alt="Correlation Matrix"></p>
+<p>In order to do that, we first center our dataset and then move on to feature engineering. We train different models on the dataset and choose the best one which is able to predict the "song_hotttness" attribute with respect to the Root Mean Squared Error. The RMSE and R2 scores for diffrent models were  as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Train R2 Score</th>
+<th>Test R2 Score</th>
+<th>Test RMSE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bayesian Ridge Regression</td>
+<td>0.256777</td>
+<td>0.256595</td>
+<td>0.138673</td>
+</tr>
+<tr>
+<td>Linear Regression</td>
+<td>0.256777</td>
+<td>0.256607</td>
+<td>0.138672</td>
+</tr>
+<tr>
+<td>Ridge Regression CV</td>
+<td>0.256777</td>
+<td>0.256603</td>
+<td>0.138672</td>
+</tr>
+<tr>
+<td>Lasso Regression CV</td>
+<td>0.256777</td>
+<td>0.256607</td>
+<td>0.138672</td>
+</tr>
+<tr>
+<td>Fully Connected NN</td>
+<td>0.282177</td>
+<td>0.279620</td>
+<td>0.136508</td>
+</tr>
+<tr>
+<td>Decision Trees</td>
+<td>0.322854</td>
+<td>0.300984</td>
+<td>0.134490</td>
+</tr>
+<tr>
+<td>Gradient Boost</td>
+<td>0.446687</td>
+<td>0.367784</td>
+<td>0.127883</td>
+</tr>
+</tbody>
+</table>
+<h3>
+<a id="gradient-boosting" class="anchor" href="#gradient-boosting" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Gradient Boosting</h3>
+<h2>
+<a id="feature-importances-for-song-popularity" class="anchor" href="#feature-importances-for-song-popularity" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Feature Importances for Song Popularity</h2>
+<p>In order to understand which features of the song affect the popularity the most, we plot the weights of the features for all the models. As we can see in the figure below, the most important features are "artist_familiarity", "artist_hotttnesss" and the "loudness" of the song. From this we may infer that the more popular and famous an artist is, it's more likely that a new track from them is also going to be popular.</p>
+<p><img src="images/regression.png" alt="Feature Weights for Regression Models"></p>
+<h2>
+<a id="metrolyrics-dataset" class="anchor" href="#metrolyrics-dataset" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>MetroLyrics Dataset</h2>
+<p>The dataset contains 362,237 songs from 18,231 artists with six columns for each song: song index, title, year released, artist, genre, and lyrics. All songs in the database were released between 1968 and 2016, excluding several songs incorrectly labeled with invalid years.</p>
+<h3>
+<a id="issues-with-dataset" class="anchor" href="#issues-with-dataset" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Issues with Dataset</h3>
+<ul>
+<li>The dataset is built by scraping Metrolyrics which is based on user input. And we all know. To err is human!</li>
+<li>Songs are in various languages. Enserio??</li>
+<li>The dataset was heavily skewed towards Rock (131,377 songs; 36.27%). Other have around 1–2% of the sample with close to 6,000.</li>
+</ul>
+<p>First, we need to clean up the dataset.</p>
+<p>Beginning:</p>
+<p>Shape before any cleaning (362237,3)</p>
+<p>Shape after drop duplicates  (250473, 3)</p>
+<p>Shape after removing non-English language songs (155954, 3), a huge loss in data equal to nearly half of the dataset.</p>
+<p><img src="images/genre.png" alt="genre"></p>
+<h2>
+<a id="forming-the-final-dataset" class="anchor" href="#forming-the-final-dataset" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Forming the Final Dataset</h2>
+<h2>
+<a id="genre-classification" class="anchor" href="#genre-classification" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Genre Classification</h2>
+<h2>
+<a id="lyrics-generation-textgenrnn" class="anchor" href="#lyrics-generation-textgenrnn" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Lyrics Generation: TextGenRNN</h2>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.gatech.edu/pgupta321">pgupta321</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
